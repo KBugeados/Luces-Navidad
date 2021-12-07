@@ -79,12 +79,6 @@ void color2_estatico(){
   delay(10);
 }
 
-void estatico(){
-  digitalWrite(5, HIGH);  
-  delay(10);
-  digitalWrite(4, HIGH);  
-  delay(10);
-}
 
 void parar(){
   digitalWrite(5, LOW);
