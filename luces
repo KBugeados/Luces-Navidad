@@ -1,0 +1,150 @@
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+
+//Información de nuestro WIFI
+char ssid[] = "";
+char pass[] = "";
+char auth[] = "";
+
+BlynkTimer timer;
+int opcion1, opcion2, opcion3, opcion4, opcion5;
+
+
+int intensidad = 255;
+int espera = 5;
+
+void desvanece(){
+ while(intensidad != 0) 
+ {
+   analogWrite(5, intensidad);
+   delay(espera);  
+   intensidad --;
+ }
+ while((intensidad < 255) && (intensidad >= 0))
+ {
+   analogWrite(5, intensidad);    
+   delay(espera);  
+   intensidad ++;    
+ }
+
+  while(intensidad != 0)
+ {
+   analogWrite(4, intensidad);
+   delay(espera);  
+   intensidad --;
+ }
+ while((intensidad < 255) && (intensidad >= 0)) 
+ {
+   analogWrite(4, intensidad);    
+   delay(espera);  
+   intensidad ++;    
+ }
+}
+
+void alterna(){
+  digitalWrite(5, HIGH);   
+  delay(1000);                      
+  digitalWrite(5, LOW);   
+  delay(10);                      
+
+  digitalWrite(4, HIGH);   
+  delay(1000);                   
+  digitalWrite(4, LOW);   
+  delay(10);                     
+}
+
+void alterna_rapido(){
+  digitalWrite(5, HIGH);  
+  delay(100);                    
+  digitalWrite(5, LOW);   
+  delay(100);                     
+
+  digitalWrite(4, HIGH); 
+  delay(100);                      
+  digitalWrite(4, LOW);  
+  delay(100);   
+}
+
+void color1_estatico(){
+  digitalWrite(4, LOW);   
+  delay(10);
+  digitalWrite(5, HIGH);   
+  delay(10);
+}
+
+void color2_estatico(){
+  digitalWrite(5, LOW);  
+  delay(10);
+  digitalWrite(4, HIGH);  
+  delay(10);
+}
+
+void estatico(){
+  digitalWrite(5, HIGH);  
+  delay(10);
+  digitalWrite(4, HIGH);  
+  delay(10);
+}
+
+void parar(){
+  digitalWrite(5, LOW);
+  digitalWrite(4, LOW);
+}
+
+
+BLYNK_WRITE(V1)
+{
+  opcion1 = param.asInt();
+}
+
+BLYNK_WRITE(V2)
+{
+  opcion2 = param.asInt();
+}
+
+BLYNK_WRITE(V3)
+{
+  opcion3 = param.asInt();
+}
+
+BLYNK_WRITE(V4)
+{
+  opcion4 = param.asInt();
+}
+
+BLYNK_WRITE(V5)
+{
+  opcion5 = param.asInt();
+}
+
+
+void setup() {
+  pinMode(5, OUTPUT); 
+  pinMode(4, OUTPUT);
+  Blynk.begin(auth, ssid, pass);
+  timer.setInterval(10, controlLuces);
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  Blynk.run();
+  timer.run();
+}
+
+void controlLuces() {
+  if (opcion1 == 0 && opcion2 == 0 && opcion3 == 0 && opcion4 == 0 && opcion5 == 0) {
+    parar();
+  } else if (opcion1 == 1 && opcion2 == 0 && opcion3 == 0 && opcion4 == 0 && opcion5 == 0) { 
+    desvanece();
+  } else if (opcion1 == 0 && opcion2 == 1 && opcion3 == 0 && opcion4 == 0 && opcion5 == 0) {
+    alterna();
+  } else if (opcion1 == 0 && opcion2 == 0 && opcion3 == 1 && opcion4 == 0 && opcion5 == 0) {
+    alterna_rapido();
+  }else if (opcion1 == 0 && opcion2 == 0 && opcion3 == 0 && opcion4 == 1 && opcion5 == 0) {
+    color1_estatico();
+  }else if (opcion1 == 0 && opcion2 == 0 && opcion3 == 0 && opcion4 == 0 && opcion5 == 1) {
+    color2_estatico();
+  }else if (opcion1 == 0 && opcion2 == 0 && opcion3 == 0 && opcion4 == 0 && opcion5 == 1) {
+    color2_estatico();
+  }
+}
